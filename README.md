@@ -1,2 +1,2 @@
 # doctor-assist-go
-Tool to help doctors to take care of patiens
+Tool to help doctors to take care of patients
