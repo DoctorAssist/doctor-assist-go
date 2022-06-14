@@ -2,7 +2,10 @@ module github.com/DoctorAssist/doctor-assist-go
 
 go 1.18
 
-require fyne.io/fyne/v2 v2.2.0
+require (
+	fyne.io/fyne/v2 v2.2.0
+	github.com/mattn/go-sqlite3 v1.14.13
+)
 
 require (
 	fyne.io/systray v1.9.1-0.20220523202515-bb6f1d955cff // indirect
