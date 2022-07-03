@@ -27,39 +27,46 @@ func New(dbFilePath string) (newApp *App, err error) {
 
 	mainWindow := newApp.NewWindow("Doctor Assist")
 	mainWindow.Resize(fyne.NewSize(450, 450))
+	newApp.mainWindow = mainWindow
 
 	return newApp, nil
+}
+
+func (a *App) NewLocalizationDialog() (dialog.Dialog, chan []string, error) {
+	localizationChannel := make(chan []string)
+	languageSelect := widget.NewSelect([]string{"Spanish", "English"},
+		func(option string) {
+			var language []string
+			switch option {
+			case "Spanish":
+				language = localization.Spanish
+			case "English":
+				language = localization.English
+			}
+
+			localizationChannel <- language
+		})
+
+	languageDialog := dialog.NewCustom("Language", "", languageSelect, a.mainWindow)
+	return languageDialog, localizationChannel, nil
+
 }
 
 func (a *App) SetupUI(uiText []string) {
 	var (
 		homeButton     *widget.Button
 		patientsButton *widget.Button
-		languageDialog dialog.Dialog
 	)
 
 	text := widget.NewLabel("Doctor Assist")
 
-	languageSelect := widget.NewSelect([]string{"Spanish", "English"}, func(option string) {
-		var language []string
-		switch option {
-		case "Spanish":
-			language = localization.Spanish
-		case "English":
-			language = localization.English
-		}
+	homeButton = widget.NewButton(uiText[localization.HomeButtonText], func() {})
+	patientsButton = widget.NewButton(uiText[localization.PatientsButtonText], func() {})
 
-		homeButton = widget.NewButton(language[localization.HomeButtonText], func() {})
-		patientsButton = widget.NewButton(language[localization.PatientsButtonText], func() {})
-
-		menuBar := container.NewVBox(homeButton, patientsButton)
-		a.mainWindow.SetContent(container.NewHBox(menuBar, text))
-		languageDialog.Hide()
-	})
-
-	languageDialog = dialog.NewCustom("Language", "", languageSelect, a.mainWindow)
+	menuBar := container.NewVBox(homeButton, patientsButton)
+	a.mainWindow.SetContent(container.NewHBox(menuBar, text))
 }
 
-func (app App) Show() {
-	app.mainWindow.ShowAndRun()
+func (a *App) Show() {
+	a.mainWindow.ShowAndRun()
 }

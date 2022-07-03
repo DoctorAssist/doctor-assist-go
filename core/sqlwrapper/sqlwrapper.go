@@ -17,8 +17,22 @@ func New(driverName, dataSourceName string) (wrapper *SQLWrapper, err error) {
 	return wrapper, err
 }
 
-func (*SQLWrapper) InsertPatientData(patients.Patient) error
-func (*SQLWrapper) FetchPatient(string) (patients.Patient, error)
-func (*SQLWrapper) FetchAllPatients(string) ([]patients.Patient, error)
-func (*SQLWrapper) UpdatePatient(patients.Patient) (error)
-func (*SQLWrapper) RemovePatient(string) error
+func (*SQLWrapper) InsertPatientData(patients.Patient) error {
+	return nil
+}
+
+func (*SQLWrapper) FetchPatient(string) (patients.Patient, error) {
+	return patients.Patient{}, nil
+}
+
+func (*SQLWrapper) FetchAllPatients(string) ([]patients.Patient, error) {
+	return nil, nil
+}
+
+func (*SQLWrapper) UpdatePatient(patients.Patient) error {
+	return nil
+}
+
+func (*SQLWrapper) RemovePatient(string) error {
+	return nil
+}

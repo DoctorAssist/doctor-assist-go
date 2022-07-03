@@ -1,2 +1,5 @@
 package handlers
 
+func NewPatientEvent() {
+	
+}
