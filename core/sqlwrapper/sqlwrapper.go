@@ -21,8 +21,8 @@ func New(driverName, dataSourceName string) (wrapper *SQLWrapper, err error) {
 func (db *SQLWrapper) InsertPatientData(ctx context.Context, p patients.Patient) error {
 	_, err := db.NamedExecContext(
 		ctx,
-		"INSERT INTO patient (name, sex, age, id, phone, email, address) "+
-			"VALUES (:name, :sex, :age, :id, :phone, :email, :address)",
+		"INSERT INTO patients (name, sex, age, phone, email, address) "+
+			"VALUES (:name, :sex, :age, :phone, :email, :address)",
 		&p,
 	)
 	if err != nil {
@@ -44,19 +44,23 @@ func (db *SQLWrapper) FetchPatient(ctx context.Context,
 }
 
 func (db *SQLWrapper) FetchAllPatients(ctx context.Context) ([]patients.Patient, error) {
-	ps := []patients.Patient{}
-	err := db.SelectContext(ctx, &p, "SELECT * FROM patients WHERE id = $1", id)
+	patients := []patients.Patient{}
+	err := db.SelectContext(ctx, &patients, "SELECT * FROM patients")
 	if err != nil {
-		return patients.Patient{}, err
+		return nil, err
 	}
 
-	return p, nil
+	return patients, nil
 }
 
-func (db *SQLWrapper) UpdatePatient(patients.Patient) error {
-
+func (db *SQLWrapper) UpdatePatient(ctx context.Context, p patients.Patient) error {
+	_, err := db.DB.NamedExecContext(ctx, "UPDATE patientes SET name = :name,"+
+		" sex = :sex, age = :age, phone = :phone, email = :email, "+
+		"address = :address WHERE id = :id ", &p)
+	return err
 }
 
-func (db *SQLWrapper) RemovePatient(string) error {
-
+func (db *SQLWrapper) RemovePatient(ctx context.Context, id string) error {
+	_, err := db.DB.NamedExecContext(ctx, "DELETE FROM table WHERE id = :id ", &id)
+	return err
 }
